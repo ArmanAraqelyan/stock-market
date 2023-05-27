@@ -2,6 +2,8 @@
 
 namespace App\DTO;
 
+use DateTime;
+
 final class StockServiceDTO
 {
     private string $companySymbol;
@@ -34,7 +36,8 @@ final class StockServiceDTO
 
     public function getStartDate(): string
     {
-        return $this->startDate;
+        $date = DateTime::createFromFormat("m/d/Y", $this->startDate);
+        return $date->format("Y-m-d");
     }
 
     public function setStartDate(string $startDate): self
@@ -45,7 +48,8 @@ final class StockServiceDTO
 
     public function getEndDate(): string
     {
-        return $this->endDate;
+        $date = DateTime::createFromFormat("m/d/Y", $this->endDate);
+        return $date->format("Y-m-d");
     }
 
     public function setEndDate(string $endDate): self

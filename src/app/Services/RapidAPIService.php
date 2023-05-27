@@ -23,9 +23,10 @@ class RapidAPIService implements RapidAPIContract
     {
         $response = $this->http->get(config('api.rapid.api-url'). $this->historicalQuotesUrl, [
             'symbol' => $stockServiceDTO->getCompanySymbol(),
-            'region' => 'US',
+            'from' => $stockServiceDTO->getStartDate(),
+            'to' => $stockServiceDTO->getEndDate()
         ]);
-        
+
         return $response->json();
     }
 }
