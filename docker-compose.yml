@@ -1,0 +1,41 @@
+version: '3.9'
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: ./docker/php/Dockerfile
+    container_name: app
+    user: ${UID}:${GID}
+    restart: unless-stopped
+    volumes:
+      - ./src:/var/www/html
+      - ./docker/php/extend-php.ini:/usr/local/etc/php/conf.d/extend-php.ini
+    networks:
+      - webserver-network
+
+  webserver:
+    image: nginx:1.21.4-alpine
+    container_name: webserver
+    restart: unless-stopped
+    volumes:
+      - ./src:/var/www/html
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./src/storage/docker/logs/nginx/:/var/log/nginx/
+    ports:
+      - "80:80"
+    networks:
+      - webserver-network
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog
+    logging:
+      driver: 'none'
+    ports:
+      - "1025:1025" # smtp server
+      - "8025:8025"
+    networks:
+      - webserver-network
+networks:
+  webserver-network:
+    driver: bridge
